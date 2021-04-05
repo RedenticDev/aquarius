@@ -5,10 +5,10 @@
 BOOL enabled = true;
 
 BOOL colorsEnabled, isRoutingButtonHidden, isBackgroundColored, isDarkImage, isArtworkBackground, haveNotifs, haveOutline;
-id preferences;
-int configurations;
+id preferences, file;
+long int configurations;
 NSString * previousTitle;
-float musicPlayerAlpha, outlineSize;
+double musicPlayerAlpha, outlineSize;
 NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.yourcompany.test.plist"];
 %group tweaky
 
@@ -458,27 +458,33 @@ if (haveNotifs){
 void reloadPrefs(){
 enabled = [file boolForKey:@"isEnabled"];
 isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
- configurations = [prefs integerForKey:@"configuration"];
- musicPlayerAlpha = [prefs floatForKey:@"holdDuration"];
+ configurations = [file integerForKey:@"configuration"];
+ musicPlayerAlpha = [file doubleForKey:@"musicPlayerAlpha"];
+ colorsEnabled = [file boolForKey:@"isRoutingButtonHidden"];
+ haveNotifs = [file boolForKey:@"notifications?"]; 
+ isBackgroundColored = [file boolForKey:@"isBackgroundColorEnabled"];
+ isArtworkBackground = [file boolForKey:@"isArtworkBackground"];
+ haveOutline = [file boolForKey:@"haveOutline?"];
+ outlineSize = [file doubleForKey:@"sizeOfOutline?"];
 }
 
 
 
 %ctor {
   HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"aquariusprefs"];
-enabled = [([file objectForKey:@"isEnabled"] ?: @(YES)) boolValue];
-isRoutingButtonHidden = [([file objectForKey:@"isRoutingButtonHidden"] ?: @(YES)) boolValue];
-    configurations = [([file objectForKey:@"configuration"] ?: @(3)) intValue];
-        musicPlayerAlpha = [([file objectForKey:@"musicPlayerAlpha"] ?: @(1)) floatValue];
-   colorsEnabled = [([file objectForKey:@"isColorsEnabled"] ?: @(NO)) boolValue];
-       haveNotifs = [([file objectForKey:@"notifications?"] ?: @(NO)) boolValue];
-   isBackgroundColored = [([file objectForKey:@"isBackgroundColorEnabled"] ?: @(YES)) boolValue];
-  isArtworkBackground = [([file objectForKey:@"isArtworkBackground"] ?: @(NO)) boolValue];
- haveOutline = [([file objectForKey:@"haveOutline?"] ?: @(YES)) boolValue];
- outlineSize = [([file objectForKey:@"sizeOfOutline?"] ?: @(5)) floatValue];
-
+       
+        [file registerBool:&enabled default:YES forKey:@"isEnabled"];
+       [file registerBool:&isRoutingButtonHidden default:YES forKey:@"isRoutingButtonHidden"];
+        [file registerDouble:&musicPlayerAlpha default:1 forKey:@"musicPlayerAlpha"];
+        [file registerInteger:&configurations default:0 forKey:@"configuration"];
+        [file registerBool:&colorsEnabled default:NO forKey:@"isColorsEnabled"];
+        [file registerBool:&haveNotifs default:NO forKey:@"notifications?"];
+        [file registerBool:&isBackgroundColored default:NO forKey:@"isBackgroundColorEnabled?"];
+          [file registerBool:&isArtworkBackground default:NO forKey:@"isArtworkBackground?"];
+           [file registerBool:&haveOutline default:NO forKey:@"haveOutline?"];
+             [file registerDouble:&outlineSize default:5 forKey:@"sizeOfOutline?"];
 if (enabled) {
         %init(tweaky);
 	}
-CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.nico671.preferenceschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPrefs, CFSTR("com.nico671.preferenceschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 }

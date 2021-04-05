@@ -26,16 +26,16 @@ BOOL enabled = true;
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class SBMediaController; @class MRUNowPlayingTransportControlsView; @class MRUNowPlayingHeaderView; @class MRUNowPlayingLabelView; @class CSAdjunctItemView; @class MRUNowPlayingControlsView; 
+@class CSAdjunctItemView; @class MRUNowPlayingLabelView; @class MRUNowPlayingTransportControlsView; @class MRUNowPlayingControlsView; @class MRUNowPlayingHeaderView; @class SBMediaController; 
 
 
 #line 7 "Tweak.xm"
 BOOL colorsEnabled, isRoutingButtonHidden, isBackgroundColored, isDarkImage, isArtworkBackground, haveNotifs, haveOutline;
-id preferences;
-int configurations;
+id preferences, file;
+long int configurations;
 NSString * previousTitle;
-float musicPlayerAlpha, outlineSize;
-NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.nico671.aquariusprefs.plist"];
+double musicPlayerAlpha, outlineSize;
+NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.yourcompany.test.plist"];
 static void (*_logos_orig$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$)(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingHeaderView* _LOGOS_SELF_CONST, SEL, BOOL); static void _logos_method$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingHeaderView* _LOGOS_SELF_CONST, SEL, BOOL); static void (*_logos_orig$tweaky$MRUNowPlayingControlsView$layoutSubviews)(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingControlsView* _LOGOS_SELF_CONST, SEL); static void _logos_method$tweaky$MRUNowPlayingControlsView$layoutSubviews(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingControlsView* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$tweaky$MRUNowPlayingLabelView$setFrame$)(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingLabelView* _LOGOS_SELF_CONST, SEL, CGRect); static void _logos_method$tweaky$MRUNowPlayingLabelView$setFrame$(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingLabelView* _LOGOS_SELF_CONST, SEL, CGRect); static void (*_logos_orig$tweaky$MRUNowPlayingTransportControlsView$layoutSubviews)(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingTransportControlsView* _LOGOS_SELF_CONST, SEL); static void _logos_method$tweaky$MRUNowPlayingTransportControlsView$layoutSubviews(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingTransportControlsView* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$tweaky$CSAdjunctItemView$_updateSizeToMimic)(_LOGOS_SELF_TYPE_NORMAL CSAdjunctItemView* _LOGOS_SELF_CONST, SEL); static void _logos_method$tweaky$CSAdjunctItemView$_updateSizeToMimic(_LOGOS_SELF_TYPE_NORMAL CSAdjunctItemView* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$tweaky$SBMediaController$setNowPlayingInfo$)(_LOGOS_SELF_TYPE_NORMAL SBMediaController* _LOGOS_SELF_CONST, SEL, id); static void _logos_method$tweaky$SBMediaController$setNowPlayingInfo$(_LOGOS_SELF_TYPE_NORMAL SBMediaController* _LOGOS_SELF_CONST, SEL, id); 
 
  
@@ -478,38 +478,39 @@ if (haveNotifs){
         previousTitle = songLabel;
       }
 }
-NSLog(@"[aquarius] is enabled? %i", enabled);
   }          
 
 
+void reloadPrefs(){
+enabled = [file boolForKey:@"isEnabled"];
+isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
+ configurations = [file integerForKey:@"configuration"];
+ musicPlayerAlpha = [file doubleForKey:@"musicPlayerAlpha"];
+ colorsEnabled = [file boolForKey:@"isRoutingButtonHidden"];
+ haveNotifs = [file boolForKey:@"notifications?"]; 
+ isBackgroundColored = [file boolForKey:@"isBackgroundColorEnabled"];
+ isArtworkBackground = [file boolForKey:@"isArtworkBackground"];
+ haveOutline = [file boolForKey:@"haveOutline?"];
+ outlineSize = [file doubleForKey:@"sizeOfOutline?"];
+}
 
 
 
-
-
-
-
-void loadPrefs(){
+static __attribute__((constructor)) void _logosLocalCtor_cb275d6c(int __unused argc, char __unused **argv, char __unused **envp) {
   HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"aquariusprefs"];
-enabled = [([file objectForKey:@"isEnabled"] ?: @(YES)) boolValue];
-isRoutingButtonHidden = [([file objectForKey:@"isRoutingHidden"] ?: @(YES)) boolValue];
-    configurations = [([file objectForKey:@"configuration"] ?: @(3)) intValue];
-        musicPlayerAlpha = [([file objectForKey:@"musicPlayerAlpha"] ?: @(1)) floatValue];
-   colorsEnabled = [([file objectForKey:@"isColorsEnabled"] ?: @(YES)) boolValue];
-       haveNotifs = [([file objectForKey:@"notifications?"] ?: @(YES)) boolValue];
-   isRoutingButtonHidden = [([file objectForKey:@"isRoutingButtonHidden"] ?: @(YES)) boolValue];
-   isBackgroundColored = [([file objectForKey:@"isBackgroundColorEnabled"] ?: @(YES)) boolValue];
-  isArtworkBackground = [([file objectForKey:@"isArtworkBackground"] ?: @(NO)) boolValue];
- haveOutline = [([file objectForKey:@"haveOutline?"] ?: @(YES)) boolValue];
- outlineSize = [([file objectForKey:@"sizeOfOutline?"] ?: @(5)) floatValue];
-
+       
+        [file registerBool:&enabled default:YES forKey:@"isEnabled"];
+       [file registerBool:&isRoutingButtonHidden default:YES forKey:@"isRoutingButtonHidden"];
+        [file registerDouble:&musicPlayerAlpha default:1 forKey:@"musicPlayerAlpha"];
+        [file registerInteger:&configurations default:0 forKey:@"configuration"];
+        [file registerBool:&colorsEnabled default:NO forKey:@"isColorsEnabled"];
+        [file registerBool:&haveNotifs default:NO forKey:@"notifications?"];
+        [file registerBool:&isBackgroundColored default:NO forKey:@"isBackgroundColorEnabled?"];
+          [file registerBool:&isArtworkBackground default:NO forKey:@"isArtworkBackground?"];
+           [file registerBool:&haveOutline default:NO forKey:@"haveOutline?"];
+             [file registerDouble:&outlineSize default:5 forKey:@"sizeOfOutline?"];
 if (enabled) {
         {Class _logos_class$tweaky$MRUNowPlayingHeaderView = objc_getClass("MRUNowPlayingHeaderView"); { MSHookMessageEx(_logos_class$tweaky$MRUNowPlayingHeaderView, @selector(setShowRoutingButton:), (IMP)&_logos_method$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$, (IMP*)&_logos_orig$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$);}Class _logos_class$tweaky$MRUNowPlayingControlsView = objc_getClass("MRUNowPlayingControlsView"); { MSHookMessageEx(_logos_class$tweaky$MRUNowPlayingControlsView, @selector(layoutSubviews), (IMP)&_logos_method$tweaky$MRUNowPlayingControlsView$layoutSubviews, (IMP*)&_logos_orig$tweaky$MRUNowPlayingControlsView$layoutSubviews);}Class _logos_class$tweaky$MRUNowPlayingLabelView = objc_getClass("MRUNowPlayingLabelView"); { MSHookMessageEx(_logos_class$tweaky$MRUNowPlayingLabelView, @selector(setFrame:), (IMP)&_logos_method$tweaky$MRUNowPlayingLabelView$setFrame$, (IMP*)&_logos_orig$tweaky$MRUNowPlayingLabelView$setFrame$);}Class _logos_class$tweaky$MRUNowPlayingTransportControlsView = objc_getClass("MRUNowPlayingTransportControlsView"); { MSHookMessageEx(_logos_class$tweaky$MRUNowPlayingTransportControlsView, @selector(layoutSubviews), (IMP)&_logos_method$tweaky$MRUNowPlayingTransportControlsView$layoutSubviews, (IMP*)&_logos_orig$tweaky$MRUNowPlayingTransportControlsView$layoutSubviews);}Class _logos_class$tweaky$CSAdjunctItemView = objc_getClass("CSAdjunctItemView"); { MSHookMessageEx(_logos_class$tweaky$CSAdjunctItemView, @selector(_updateSizeToMimic), (IMP)&_logos_method$tweaky$CSAdjunctItemView$_updateSizeToMimic, (IMP*)&_logos_orig$tweaky$CSAdjunctItemView$_updateSizeToMimic);}Class _logos_class$tweaky$SBMediaController = objc_getClass("SBMediaController"); { MSHookMessageEx(_logos_class$tweaky$SBMediaController, @selector(setNowPlayingInfo:), (IMP)&_logos_method$tweaky$SBMediaController$setNowPlayingInfo$, (IMP*)&_logos_orig$tweaky$SBMediaController$setNowPlayingInfo$);}}
 	}
-}
-
-static __attribute__((constructor)) void _logosLocalCtor_62a0097d(int __unused argc, char __unused **argv, char __unused **envp) {
-NSLog(@"[aquarius] is enabled? %i", enabled);
-loadPrefs();
-CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.nico671.preferenceschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPrefs, CFSTR("com.nico671.preferenceschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 }
