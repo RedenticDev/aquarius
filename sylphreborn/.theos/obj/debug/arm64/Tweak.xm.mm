@@ -26,7 +26,7 @@ BOOL enabled = true;
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class CSAdjunctItemView; @class MRUNowPlayingLabelView; @class MRUNowPlayingTransportControlsView; @class MRUNowPlayingControlsView; @class MRUNowPlayingHeaderView; @class SBMediaController; 
+@class MRUNowPlayingTransportControlsView; @class SBMediaController; @class MRUNowPlayingControlsView; @class MRUNowPlayingLabelView; @class CSAdjunctItemView; @class MRUNowPlayingHeaderView; 
 
 
 #line 7 "Tweak.xm"
@@ -471,13 +471,13 @@ lastArtworkData2 = [dict objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayi
            
   	});
     
-if (haveNotifs){
+
   if (songLabel && subtitleLabel) {
 			if(![songLabel isEqualToString:previousTitle] && currentArtwork)
 [[objc_getClass("JBBulletinManager") sharedInstance] showBulletinWithTitle:subtitleLabel message:songLabel overrideBundleImage:currentArtwork];
         previousTitle = songLabel;
       }
-}
+
   }          
 
 
@@ -504,7 +504,7 @@ static __attribute__((constructor)) void _logosLocalCtor_cb275d6c(int __unused a
         [file registerDouble:&musicPlayerAlpha default:1 forKey:@"musicPlayerAlpha"];
         [file registerInteger:&configurations default:0 forKey:@"configuration"];
         [file registerBool:&colorsEnabled default:NO forKey:@"isColorsEnabled"];
-        [file registerBool:&haveNotifs default:NO forKey:@"notifications?"];
+        [file registerBool:&haveNotifs default:YES forKey:@"notifications?"];
         [file registerBool:&isBackgroundColored default:NO forKey:@"isBackgroundColorEnabled?"];
           [file registerBool:&isArtworkBackground default:NO forKey:@"isArtworkBackground?"];
            [file registerBool:&haveOutline default:NO forKey:@"haveOutline?"];

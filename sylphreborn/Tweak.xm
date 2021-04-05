@@ -387,7 +387,7 @@ songBackground = [UIButton new];
 [songBackground setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height)];
 }
 
-if (isBackgroundColored){
+if (isBackgroundColored == YES){
  [platterView.backgroundView setAlpha: 0];
   coloredBackground = [UIView new];
   [coloredBackground setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height)];
@@ -445,13 +445,13 @@ lastArtworkData2 = [dict objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayi
            
   	});
     
-if (haveNotifs){
+
   if (songLabel && subtitleLabel) {
 			if(![songLabel isEqualToString:previousTitle] && currentArtwork)//TODO: add option to choose between artwork and now playing app as the icon  {
 [[objc_getClass("JBBulletinManager") sharedInstance] showBulletinWithTitle:subtitleLabel message:songLabel overrideBundleImage:currentArtwork];
         previousTitle = songLabel;
       }
-}
+
   }          
 %end
 %end
@@ -459,13 +459,13 @@ void reloadPrefs(){
 enabled = [file boolForKey:@"isEnabled"];
 isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
  configurations = [file integerForKey:@"configuration"];
- musicPlayerAlpha = [file doubleForKey:@"musicPlayerAlpha"];
+ musicPlayerAlpha = [file floatForKey:@"musicPlayerAlpha"];
  colorsEnabled = [file boolForKey:@"isRoutingButtonHidden"];
  haveNotifs = [file boolForKey:@"notifications?"]; 
  isBackgroundColored = [file boolForKey:@"isBackgroundColorEnabled"];
  isArtworkBackground = [file boolForKey:@"isArtworkBackground"];
  haveOutline = [file boolForKey:@"haveOutline?"];
- outlineSize = [file doubleForKey:@"sizeOfOutline?"];
+ outlineSize = [file floatForKey:@"sizeOfOutline?"];
 }
 
 
@@ -478,7 +478,7 @@ isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
         [file registerDouble:&musicPlayerAlpha default:1 forKey:@"musicPlayerAlpha"];
         [file registerInteger:&configurations default:0 forKey:@"configuration"];
         [file registerBool:&colorsEnabled default:NO forKey:@"isColorsEnabled"];
-        [file registerBool:&haveNotifs default:NO forKey:@"notifications?"];
+        [file registerBool:&haveNotifs default:YES forKey:@"notifications?"];
         [file registerBool:&isBackgroundColored default:NO forKey:@"isBackgroundColorEnabled?"];
           [file registerBool:&isArtworkBackground default:NO forKey:@"isArtworkBackground?"];
            [file registerBool:&haveOutline default:NO forKey:@"haveOutline?"];
