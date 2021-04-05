@@ -1,0 +1,10 @@
+Package: com.nico671.sylphreborn
+Name: sylph reborn
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: nico671
+Author: nico671
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)
+Version: 1.6.3-25+debug
+Installed-Size: 740
