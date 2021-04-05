@@ -9,7 +9,7 @@ id preferences;
 int configurations;
 NSString * previousTitle;
 float musicPlayerAlpha, outlineSize;
-NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.nico671.aquariusprefs.plist"];
+NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.yourcompany.test.plist"];
 %group tweaky
 
 %hook MRUNowPlayingHeaderView //hides the little routing button
@@ -455,16 +455,23 @@ if (haveNotifs){
   }          
 %end
 %end
+void reloadPrefs(){
+enabled = [file boolForKey:@"isEnabled"];
+isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
+ configurations = [prefs integerForKey:@"configuration"];
+ musicPlayerAlpha = [prefs floatForKey:@"holdDuration"];
+}
 
-void loadPrefs(){
+
+
+%ctor {
   HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"aquariusprefs"];
 enabled = [([file objectForKey:@"isEnabled"] ?: @(YES)) boolValue];
-isRoutingButtonHidden = [([file objectForKey:@"isRoutingHidden"] ?: @(YES)) boolValue];
+isRoutingButtonHidden = [([file objectForKey:@"isRoutingButtonHidden"] ?: @(YES)) boolValue];
     configurations = [([file objectForKey:@"configuration"] ?: @(3)) intValue];
         musicPlayerAlpha = [([file objectForKey:@"musicPlayerAlpha"] ?: @(1)) floatValue];
-   colorsEnabled = [([file objectForKey:@"isColorsEnabled"] ?: @(YES)) boolValue];
-       haveNotifs = [([file objectForKey:@"notifications?"] ?: @(YES)) boolValue];
-   isRoutingButtonHidden = [([file objectForKey:@"isRoutingButtonHidden"] ?: @(YES)) boolValue];
+   colorsEnabled = [([file objectForKey:@"isColorsEnabled"] ?: @(NO)) boolValue];
+       haveNotifs = [([file objectForKey:@"notifications?"] ?: @(NO)) boolValue];
    isBackgroundColored = [([file objectForKey:@"isBackgroundColorEnabled"] ?: @(YES)) boolValue];
   isArtworkBackground = [([file objectForKey:@"isArtworkBackground"] ?: @(NO)) boolValue];
  haveOutline = [([file objectForKey:@"haveOutline?"] ?: @(YES)) boolValue];
@@ -473,9 +480,5 @@ isRoutingButtonHidden = [([file objectForKey:@"isRoutingHidden"] ?: @(YES)) bool
 if (enabled) {
         %init(tweaky);
 	}
-}
-
-%ctor {
-loadPrefs();
 CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.nico671.preferenceschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 }
