@@ -1,4 +1,4 @@
-#include "XXXRootListController.h"
+#include "AQRRootListController.h"
 #import <spawn.h>
 #import <Preferences/PSListController.h>
 #import <Preferences/PSSpecifier.h>
@@ -22,11 +22,11 @@
     NSMutableDictionary *settings = [NSMutableDictionary dictionary];
 	[settings addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.nico671.orionprefs.plist"]];	
     
-	NSNumber *didShowOBWelcomeController = [settings valueForKey:@"didShowOBWelcomeController"] ?: @0;
+//	NSNumber *didShowOBWelcomeController = [settings valueForKey:@"didShowOBWelcomeController"] ?: @0;
 
-    if ([didShowOBWelcomeController isEqual:@0]) {
+   // if ([didShowOBWelcomeController isEqual:@0]) {
 		[self setupWelcomeController];
-    }
+    //}
 
     
   
@@ -140,7 +140,7 @@ return self;
 
     CGRect nameFrame = CGRectMake(CGRectGetMidX(rect), 90, width, 50);
     CGRect developerFrame = CGRectMake(CGRectGetMidX(rect), 50, width, 50);
-    CGRect versionFrame = CGRectMake(CGRectGetMidX(rect), 130, width, 50)
+    CGRect versionFrame = CGRectMake(CGRectGetMidX(rect), 130, width, 50);
 
     packageNameLabel = [[UILabel alloc] initWithFrame:nameFrame];
     [packageNameLabel setFont:[UIFont systemFontOfSize:50 weight: UIFontWeightSemibold] ];
