@@ -35,16 +35,17 @@ NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 
 
 %hook MRUNowPlayingControlsView 
--(void)layoutSubviews{
+-(void)layoutSubviews{ //ik this is bad but i have yet to find another method maybe because of the %orig; TODO:find another method for this
   %orig;
   MRUNowPlayingViewController *controller = (MRUNowPlayingViewController *)[self _viewControllerForAncestor]; //s/o lightmann for this it allows me to only change the lockscreen player and not the cc player
 if (isArtworkBackground){
-[self.headerView.artworkView setHidden:YES];
+[self.headerView.artworkView setHidden:YES]; // for the artwork background option, looks shit with the standard artwork there, unfortunately not working right noew along with the rest of the artwork background stuff
 }
 if(controller.context == 2 && configurations == 0){
 
-[self.transportControlsView setFrame: CGRectMake(CGRectGetMidX(self.headerView.artworkView.frame)+5,CGRectGetMidY(self.headerView.frame),self.transportControlsView.frame.size.width,self.transportControlsView.frame.size.height)];
-if (!artistNameLabel){
+[self.transportControlsView setFrame: CGRectMake(CGRectGetMidX(self.headerView.artworkView.frame)+5,CGRectGetMidY(self.headerView.frame),self.transportControlsView.frame.size.width,self.transportControlsView.frame.size.height)]; 
+//resizing controls, almost same for everytime i do this
+if (!artistNameLabel){ //creates the label with whatever settings
 artistNameLabel = [MarqueeLabel new];
         [artistNameLabel setFont:[UIFont systemFontOfSize:15]];
         [artistNameLabel setTextAlignment:NSTextAlignmentLeft];
@@ -52,7 +53,7 @@ artistNameLabel = [MarqueeLabel new];
         [self addSubview:artistNameLabel];
 {
           UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"customTitleLabelColor"] withFallback:@"#000000"];
-          [songTitleLabel setTextColor: customColor];
+          [songTitleLabel setTextColor: customColor]; //standard custom color
         }
         [artistNameLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [artistNameLabel.widthAnchor constraintEqualToConstant:230].active = YES;
@@ -60,7 +61,7 @@ artistNameLabel = [MarqueeLabel new];
         [artistNameLabel.leftAnchor constraintEqualToAnchor:self.headerView.artworkView.rightAnchor].active = YES;
         [artistNameLabel.bottomAnchor constraintEqualToAnchor:self.transportControlsView.topAnchor constant:3].active = YES;
 }
-if (!songTitleLabel){
+if (!songTitleLabel){ //basically same as other label
 songTitleLabel = [MarqueeLabel new];
         [songTitleLabel setFont:[UIFont systemFontOfSize:15]];
         [songTitleLabel setTextAlignment:NSTextAlignmentLeft];
@@ -161,7 +162,8 @@ songTitleLabel = [MarqueeLabel new];
 }
 }
 
-else if (configurations == 3 && controller.context == 2){
+else if (configurations == 3  && controller.context == 2){ 
+  //small option
   [self.headerView.artworkView setHidden:YES];
   [self.transportControlsView setFrame: CGRectMake(CGRectGetMidX(self.headerView.artworkView.frame)+5,CGRectGetMinY(self.headerView.frame)+30,self.transportControlsView.frame.size.width,self.transportControlsView.frame.size.height)];
 [self.volumeControlsView setHidden:YES];
@@ -177,6 +179,7 @@ if (!songImageForSmall){
           [self addSubview:songImageForSmall];
           [songImageForSmall setTranslatesAutoresizingMaskIntoConstraints:YES];
           [songImageForSmall setFrame: CGRectMake(CGRectGetMinX(self.frame)-20,CGRectGetMinY(self.frame)-25,85,85)];
+          //couldnt adjust the size of the player so i just made a thing myself (its a button because i have the plan of adding gestures in the future)
 }
 if (!artistNameLabel){
 artistNameLabel = [MarqueeLabel new];
@@ -443,15 +446,17 @@ lastArtworkData2 = [dict objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayi
 if (haveNotifs){
 		if(![songLabel isEqualToString:previousTitle])//TODO: add option to choose between artwork and now playing app as the icon  {
 [[objc_getClass("JBBulletinManager") sharedInstance] showBulletinWithTitle:subtitleLabel message:songLabel overrideBundleImage:currentArtwork];
-       previousTitle = songLabel;
+       previousTitle = songLabel; //notifications
 
       
 }
-      NSLog(@"[aquarius] %i",haveNotifs);
+
   }          
 %end
 %end
-void reloadPrefs(){
+
+
+void reloadPrefs(){//prefs
 enabled = [file boolForKey:@"isEnabled"];
 isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
  configurations = [file integerForKey:@"configuration"];
