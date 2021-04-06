@@ -6,4 +6,4 @@ Description: Beautify the lockscreen player
 Maintainer: nico671 <carbone.nicolas0@gmail.com>
 Author: nico671 <carbone.nicolas0@gmail.com>
 Section: Tweaks
-Depends: mobilesubstrate (>= 0.9.5000), com.spark.libsparkcolourpicker, net.limneos.libbulletin, love.litten.libkitten, ws.hbang.common (>= 1.11)
+Depends: mobilesubstrate (>= 0.9.5000), com.spark.libsparkcolourpicker, net.limneos.libbulletin, love.litten.libkitten, ws.hbang.common (>= 1.16)

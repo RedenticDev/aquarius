@@ -373,9 +373,8 @@ else if(configurations == 3){
   self.layer.cornerRadius = 10;
   }
   [self.heightAnchor constraintEqualToConstant:100].active = true;
-if (isArtworkBackground){
+if (isArtworkBackground == YES){
    [platterView.backgroundView setAlpha: 0];
-   	[platterView.backgroundView.layer setCornerRadius:2];
 songBackground = [UIButton new];
 [songBackground setContentMode:UIViewContentModeScaleAspectFill];
 [songBackground setClipsToBounds:YES];
@@ -389,7 +388,7 @@ songBackground = [UIButton new];
 [songBackground setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height)];
 }
 
-if (isBackgroundColored){
+if (isBackgroundColored == YES){
  [platterView.backgroundView setAlpha: 0];
   coloredBackground = [UIView new];
   [coloredBackground setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height)];

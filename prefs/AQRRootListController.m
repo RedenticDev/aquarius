@@ -22,11 +22,11 @@
     NSMutableDictionary *settings = [NSMutableDictionary dictionary];
 	[settings addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.nico671.orionprefs.plist"]];	
     
-//	NSNumber *didShowOBWelcomeController = [settings valueForKey:@"didShowOBWelcomeController"] ?: @0;
+	NSNumber *didShowOBWelcomeController = [settings valueForKey:@"didShowOBWelcomeController"] ?: @0;
 
-   // if ([didShowOBWelcomeController isEqual:@0]) {
+    if ([didShowOBWelcomeController isEqual:@0]) {
 		[self setupWelcomeController];
-    //}
+    }
 
     
   

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>test</string>
+	<string>Aquarius</string>
 	<key>CFBundleIdentifier</key>
 	<string>aquariusprefs</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -19,6 +19,6 @@
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>NSPrincipalClass</key>
-	<string>XXXRootListController</string>
+	<string>AQRRootListController</string>
 </dict>
 </plist>
