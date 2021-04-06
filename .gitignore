@@ -1,2 +1,4 @@
 
-sylphreborn/Makefile
+.DS_Store
+.theos/
+packages/
