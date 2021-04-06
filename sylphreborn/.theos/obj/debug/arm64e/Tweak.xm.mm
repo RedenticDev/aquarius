@@ -26,16 +26,16 @@ BOOL enabled = true;
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class CSAdjunctItemView; @class MRUNowPlayingTransportControlsView; @class MRUNowPlayingHeaderView; @class MRUNowPlayingControlsView; @class MRUNowPlayingLabelView; @class SBMediaController; 
+@class SBMediaController; @class MRUNowPlayingLabelView; @class MRUNowPlayingTransportControlsView; @class CSAdjunctItemView; @class MRUNowPlayingHeaderView; @class MRUNowPlayingControlsView; 
 
 
 #line 7 "Tweak.xm"
 BOOL colorsEnabled, isRoutingButtonHidden, isBackgroundColored, isDarkImage, isArtworkBackground, haveNotifs, haveOutline;
 id preferences, file;
 long int configurations;
-NSString * previousTitle;
+NSString * previousTitle = nil;
 double musicPlayerAlpha, outlineSize;
-NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.yourcompany.test.plist"];
+NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/aquariusprefs.plist"];
 static void (*_logos_orig$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$)(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingHeaderView* _LOGOS_SELF_CONST, SEL, BOOL); static void _logos_method$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingHeaderView* _LOGOS_SELF_CONST, SEL, BOOL); static void (*_logos_orig$tweaky$MRUNowPlayingControlsView$layoutSubviews)(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingControlsView* _LOGOS_SELF_CONST, SEL); static void _logos_method$tweaky$MRUNowPlayingControlsView$layoutSubviews(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingControlsView* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$tweaky$MRUNowPlayingLabelView$setFrame$)(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingLabelView* _LOGOS_SELF_CONST, SEL, CGRect); static void _logos_method$tweaky$MRUNowPlayingLabelView$setFrame$(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingLabelView* _LOGOS_SELF_CONST, SEL, CGRect); static void (*_logos_orig$tweaky$MRUNowPlayingTransportControlsView$layoutSubviews)(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingTransportControlsView* _LOGOS_SELF_CONST, SEL); static void _logos_method$tweaky$MRUNowPlayingTransportControlsView$layoutSubviews(_LOGOS_SELF_TYPE_NORMAL MRUNowPlayingTransportControlsView* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$tweaky$CSAdjunctItemView$_updateSizeToMimic)(_LOGOS_SELF_TYPE_NORMAL CSAdjunctItemView* _LOGOS_SELF_CONST, SEL); static void _logos_method$tweaky$CSAdjunctItemView$_updateSizeToMimic(_LOGOS_SELF_TYPE_NORMAL CSAdjunctItemView* _LOGOS_SELF_CONST, SEL); static void (*_logos_orig$tweaky$SBMediaController$setNowPlayingInfo$)(_LOGOS_SELF_TYPE_NORMAL SBMediaController* _LOGOS_SELF_CONST, SEL, id); static void _logos_method$tweaky$SBMediaController$setNowPlayingInfo$(_LOGOS_SELF_TYPE_NORMAL SBMediaController* _LOGOS_SELF_CONST, SEL, id); 
 
  
@@ -50,7 +50,6 @@ static void (*_logos_orig$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$)(
       _logos_orig$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$(self, _cmd, NO);
       else{
         _logos_orig$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$(self, _cmd, arg1);
-        [self setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y-20,self.frame.size.width,self.frame.size.height)];
       }
       }
   }
@@ -460,24 +459,21 @@ static void _logos_method$tweaky$SBMediaController$setNowPlayingInfo$(_LOGOS_SEL
 [songImageForSmall setImage:currentArtwork forState:UIControlStateNormal];
                     [coloredBackground setBackgroundColor:[libKitten primaryColor:currentArtwork]];
                     }
-
-  
-    
-            
 lastArtworkData2 = [dict objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
 
                 }
                  
            
   	});
-    
 
-  if (songLabel && subtitleLabel) {
-			if(![songLabel isEqualToString:previousTitle] && currentArtwork)
+if (haveNotifs){
+		if(![songLabel isEqualToString:previousTitle])
 [[objc_getClass("JBBulletinManager") sharedInstance] showBulletinWithTitle:subtitleLabel message:songLabel overrideBundleImage:currentArtwork];
-        previousTitle = songLabel;
-      }
+       previousTitle = songLabel;
 
+      
+}
+      NSLog(@"[aquarius] %i",haveNotifs);
   }          
 
 
@@ -496,7 +492,7 @@ isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
 
 
 
-static __attribute__((constructor)) void _logosLocalCtor_cb275d6c(int __unused argc, char __unused **argv, char __unused **envp) {
+static __attribute__((constructor)) void _logosLocalCtor_bdc0e638(int __unused argc, char __unused **argv, char __unused **envp) {
   HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"aquariusprefs"];
        
         [file registerBool:&enabled default:YES forKey:@"isEnabled"];
@@ -512,5 +508,6 @@ static __attribute__((constructor)) void _logosLocalCtor_cb275d6c(int __unused a
 if (enabled) {
         {Class _logos_class$tweaky$MRUNowPlayingHeaderView = objc_getClass("MRUNowPlayingHeaderView"); { MSHookMessageEx(_logos_class$tweaky$MRUNowPlayingHeaderView, @selector(setShowRoutingButton:), (IMP)&_logos_method$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$, (IMP*)&_logos_orig$tweaky$MRUNowPlayingHeaderView$setShowRoutingButton$);}Class _logos_class$tweaky$MRUNowPlayingControlsView = objc_getClass("MRUNowPlayingControlsView"); { MSHookMessageEx(_logos_class$tweaky$MRUNowPlayingControlsView, @selector(layoutSubviews), (IMP)&_logos_method$tweaky$MRUNowPlayingControlsView$layoutSubviews, (IMP*)&_logos_orig$tweaky$MRUNowPlayingControlsView$layoutSubviews);}Class _logos_class$tweaky$MRUNowPlayingLabelView = objc_getClass("MRUNowPlayingLabelView"); { MSHookMessageEx(_logos_class$tweaky$MRUNowPlayingLabelView, @selector(setFrame:), (IMP)&_logos_method$tweaky$MRUNowPlayingLabelView$setFrame$, (IMP*)&_logos_orig$tweaky$MRUNowPlayingLabelView$setFrame$);}Class _logos_class$tweaky$MRUNowPlayingTransportControlsView = objc_getClass("MRUNowPlayingTransportControlsView"); { MSHookMessageEx(_logos_class$tweaky$MRUNowPlayingTransportControlsView, @selector(layoutSubviews), (IMP)&_logos_method$tweaky$MRUNowPlayingTransportControlsView$layoutSubviews, (IMP*)&_logos_orig$tweaky$MRUNowPlayingTransportControlsView$layoutSubviews);}Class _logos_class$tweaky$CSAdjunctItemView = objc_getClass("CSAdjunctItemView"); { MSHookMessageEx(_logos_class$tweaky$CSAdjunctItemView, @selector(_updateSizeToMimic), (IMP)&_logos_method$tweaky$CSAdjunctItemView$_updateSizeToMimic, (IMP*)&_logos_orig$tweaky$CSAdjunctItemView$_updateSizeToMimic);}Class _logos_class$tweaky$SBMediaController = objc_getClass("SBMediaController"); { MSHookMessageEx(_logos_class$tweaky$SBMediaController, @selector(setNowPlayingInfo:), (IMP)&_logos_method$tweaky$SBMediaController$setNowPlayingInfo$, (IMP*)&_logos_orig$tweaky$SBMediaController$setNowPlayingInfo$);}}
 	}
+
 CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPrefs, CFSTR("com.nico671.preferenceschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 }

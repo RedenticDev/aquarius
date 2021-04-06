@@ -117,6 +117,20 @@
 			<key>user</key>
 			<string>schneelittchen</string>
 		</dict>
+
+		<dict>
+		
+			<key>big</key>
+			<true/>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>height</key>
+			<integer>56</integer>
+			<key>label</key>
+			<string>Main tester's Twitter</string>
+			<key>user</key>
+			<string>justAT3chGuy</string>
+		</dict>
 		
    
 	</array>

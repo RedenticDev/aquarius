@@ -15,7 +15,7 @@
             <key>cell</key>
             <string>PSSwitchCell</string>
             <key>default</key>
-            <false/>
+            <true/>
             <key>defaults</key>
             <string>aquariusprefs</string>
             <key>PostNotification</key>

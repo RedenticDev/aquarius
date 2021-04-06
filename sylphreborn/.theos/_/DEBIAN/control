@@ -6,5 +6,5 @@ Maintainer: nico671
 Author: nico671
 Section: Tweaks
 Depends: mobilesubstrate (>= 0.9.5000), com.spark.libsparkcolourpicker, net.limneos.libbulletin, love.litten.libkitten, ws.hbang.common (>= 1.11)
-Version: 1.6.3-7+debug
+Version: 1.6.3-25+debug
 Installed-Size: 756

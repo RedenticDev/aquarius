@@ -1,15 +1,15 @@
 #import "headers.h"
 #import "Kitten/libKitten.h"
 #import <Cephei/HBPreferences.h>
-
+//TODO: fix artwork and colored background
 BOOL enabled = true;
 
 BOOL colorsEnabled, isRoutingButtonHidden, isBackgroundColored, isDarkImage, isArtworkBackground, haveNotifs, haveOutline;
 id preferences, file;
 long int configurations;
-NSString * previousTitle;
+NSString * previousTitle = nil;
 double musicPlayerAlpha, outlineSize;
-NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.yourcompany.test.plist"];
+NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/aquariusprefs.plist"];
 %group tweaky
 
 %hook MRUNowPlayingHeaderView //hides the little routing button
@@ -24,7 +24,6 @@ NSDictionary* preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
       %orig(NO);
       else{
         %orig;
-        [self setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y-20,self.frame.size.width,self.frame.size.height)];
       }
       }
   }
@@ -387,7 +386,7 @@ songBackground = [UIButton new];
 [songBackground setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height)];
 }
 
-if (isBackgroundColored == YES){
+if (isBackgroundColored){
  [platterView.backgroundView setAlpha: 0];
   coloredBackground = [UIView new];
   [coloredBackground setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height)];
@@ -434,24 +433,21 @@ if (isBackgroundColored == YES){
 [songImageForSmall setImage:currentArtwork forState:UIControlStateNormal];
                     [coloredBackground setBackgroundColor:[libKitten primaryColor:currentArtwork]];
                     }
-
-  
-    
-            
 lastArtworkData2 = [dict objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
 
                 }
                  
            
   	});
-    
 
-  if (songLabel && subtitleLabel) {
-			if(![songLabel isEqualToString:previousTitle] && currentArtwork)//TODO: add option to choose between artwork and now playing app as the icon  {
+if (haveNotifs){
+		if(![songLabel isEqualToString:previousTitle])//TODO: add option to choose between artwork and now playing app as the icon  {
 [[objc_getClass("JBBulletinManager") sharedInstance] showBulletinWithTitle:subtitleLabel message:songLabel overrideBundleImage:currentArtwork];
-        previousTitle = songLabel;
-      }
+       previousTitle = songLabel;
 
+      
+}
+      NSLog(@"[aquarius] %i",haveNotifs);
   }          
 %end
 %end
@@ -459,13 +455,13 @@ void reloadPrefs(){
 enabled = [file boolForKey:@"isEnabled"];
 isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
  configurations = [file integerForKey:@"configuration"];
- musicPlayerAlpha = [file floatForKey:@"musicPlayerAlpha"];
+ musicPlayerAlpha = [file doubleForKey:@"musicPlayerAlpha"];
  colorsEnabled = [file boolForKey:@"isRoutingButtonHidden"];
  haveNotifs = [file boolForKey:@"notifications?"]; 
  isBackgroundColored = [file boolForKey:@"isBackgroundColorEnabled"];
  isArtworkBackground = [file boolForKey:@"isArtworkBackground"];
  haveOutline = [file boolForKey:@"haveOutline?"];
- outlineSize = [file floatForKey:@"sizeOfOutline?"];
+ outlineSize = [file doubleForKey:@"sizeOfOutline?"];
 }
 
 
@@ -486,5 +482,6 @@ isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
 if (enabled) {
         %init(tweaky);
 	}
+
 CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPrefs, CFSTR("com.nico671.preferenceschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 }
