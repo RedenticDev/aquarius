@@ -11,6 +11,9 @@
 #include <spawn.h>
 
 @implementation AQRRootListController
+- (void)twitterDave {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/davewijk"] options:@{} completionHandler:nil];
+}
 
 - (void)sourceCode {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/nico671/aquarius"] options:@{} completionHandler:nil];
@@ -93,8 +96,8 @@
 
         HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
         appearanceSettings.tintColor = [UIColor colorWithRed:0.60 green:0.75 blue:0.85 alpha:1.0];
-        appearanceSettings.tableViewCellSeparatorColor = [UIColor colorWithWhite:0 alpha:0];
-
+        appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
+        appearanceSettings.tableViewCellSelectionColor = [UIColor colorWithRed:0.60 green:0.75 blue:0.85 alpha:1.0];
         self.hb_appearanceSettings = appearanceSettings;
 
 

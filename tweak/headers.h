@@ -5,18 +5,14 @@
 #import <EventKit/EventKit.h>
 #import <Cephei/HBPreferences.h>
 #import <sys/utsname.h>
-
+#import "Kitten/libKitten.h"
+#import <Cephei/HBPreferences.h>
 #import <objc/runtime.h>
 #import <dlfcn.h>
-
 #import "JBBulletinManager.h"
-
 #import <AVKit/AVKit.h>
-
 #import <MediaRemote/MediaRemote.h>
 #import <AudioToolbox/AudioServices.h>
-
-
 #import "SparkColourPickerUtils.h"
 #import "MarqueeLabel.h"
 #import <QuartzCore/QuartzCore.h>
@@ -173,6 +169,7 @@
 
 @interface MRUNowPlayingView : UIView
 @property (nonatomic, retain) MRUNowPlayingControlsView *controlsView;
+-(void) updateVisibility;
 @end
 
 @interface MRUNowPlayingViewController : UIViewController
