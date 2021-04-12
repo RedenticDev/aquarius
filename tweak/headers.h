@@ -38,7 +38,6 @@
 
 @interface CSAdjunctItemView : UIView{ //player iOS 13 & 14
 	UIView* _platterView;
-
 }
 
 @end
@@ -165,11 +164,15 @@
 @property (nonatomic, retain) MRUNowPlayingTimeControlsView *timeControlsView;
 @property (nonatomic, retain) MRUNowPlayingTransportControlsView *transportControlsView;
 @property (nonatomic, retain) MRUNowPlayingVolumeControlsView *volumeControlsView;
++(id)sharedInstance;
+-(void)updateVisibility;
 @end
+
+
 
 @interface MRUNowPlayingView : UIView
 @property (nonatomic, retain) MRUNowPlayingControlsView *controlsView;
--(void) updateVisibility;
+
 @end
 
 @interface MRUNowPlayingViewController : UIViewController
@@ -203,7 +206,8 @@ UIView *test;
 UIColor *customColor;
 NSString *songLabel;
 NSString *subtitleLabel;
-
+UIStackView* stackView;
+UIView* aqView;
 
 @interface PLPlatterView : UIView
 @property (nonatomic,retain) MTMaterialView * backgroundView;
