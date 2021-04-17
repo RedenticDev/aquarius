@@ -1,5 +1,4 @@
 #include "AQRRootListController.h"
-#import <spawn.h>
 #import <Preferences/PSListController.h>
 #import <Preferences/PSSpecifier.h>
 #import <Preferences/PSTableCell.h>
@@ -7,7 +6,6 @@
 #import "SparkColourPickerView.h"
 #import <SpringBoardServices/SBSRestartRenderServerAction.h>
 #import <FrontBoardServices/FBSSystemService.h>
-
 #include <spawn.h>
 
 @implementation AQRRootListController
@@ -37,9 +35,9 @@
 
 - (void)dismissWelcomeController {
 	NSMutableDictionary *settings = [NSMutableDictionary dictionary];
-	[settings addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.hius.HalFiPadPrefs.plist"]];
+	[settings addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/aquariusprefs.plist"]];
 	[settings setObject:@1 forKey:@"didShowOBWelcomeController"];
-	[settings writeToFile:@"/var/mobile/Library/Preferences/com.nico671.bettermusicplayer.plist" atomically:YES];
+	[settings writeToFile:@"/var/mobile/Library/Preferences/aquariusprefs.plist" atomically:YES];
 	[welcomeController dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -83,7 +81,7 @@
     [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [blurView setAlpha:1.0];
     } completion:^(BOOL finished) {
-        NSURL *returnURL = [NSURL URLWithString:@"prefs:root=orionprefs"];
+        NSURL *returnURL = [NSURL URLWithString:@"prefs:root=aquariusprefs"];
         SBSRelaunchAction *restartAction;
         restartAction = [NSClassFromString(@"SBSRelaunchAction") actionWithReason:@"RestartRenderServer" options:SBSRelaunchActionOptionsFadeToBlackTransition targetURL:returnURL];
         [[NSClassFromString(@"FBSSystemService") sharedService] sendActions:[NSSet setWithObject:restartAction] withResult:nil];
@@ -163,7 +161,7 @@ return self;
     [versionLabel setFont:[UIFont systemFontOfSize:22 weight: UIFontWeightMedium] ];
     versionLabel.textColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.8];
      [versionLabel setTextAlignment:NSTextAlignmentCenter];
-    versionLabel.text = @"v1.6.4";
+    versionLabel.text = @"v1.7";
 
     [self addSubview:packageNameLabel];
     [self addSubview:developerLabel];

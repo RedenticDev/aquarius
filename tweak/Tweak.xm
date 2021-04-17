@@ -1,13 +1,13 @@
 #import "headers.h"
-BOOL enabled = YES;
-BOOL colorsEnabled, isRoutingButtonHidden, isBackgroundColored, isDarkImage, isArtworkBackground, haveNotifs, haveOutline;
+BOOL musicPlayerEnabled, musicPlayerColorsEnabled;
+BOOL isTimeHidden,showPercentage, modernStatusBar, isCellularThingyHidden, isWifiThingyHidden, isRoutingButtonHidden, isBackgroundColored, isDarkImage, isArtworkBackground, haveNotifs, haveOutline, statusBarSectionEnabled, isBatteryHidden;
 //TODO: fucking fix the default player and the progress bar player u dunce
 id preferences, file, yes;
 long int configurations;
 NSString *previousTitle = @"poggers";
-double musicPlayerAlpha, outlineSize;
+double musicPlayerAlpha, outlineSize, rightOffsetForText;
 NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/aquariusprefs.plist"];
-%group tweaky
+%group musicplayer
 %hook MRUNowPlayingHeaderView // hides the little routing button
 - (void)setShowRoutingButton:(BOOL)arg1 {
 	MRUNowPlayingViewController *controller = (MRUNowPlayingViewController *)[self _viewControllerForAncestor];
@@ -22,6 +22,7 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 %end
 %hook MRUNowPlayingControlsView 
 -(void)setNeedsLayout{
+
 	MRUNowPlayingViewController *controller = (MRUNowPlayingViewController *)[self _viewControllerForAncestor]; //s/o lightmann for this it allows me to only change the lockscreen player and not the cc player
 	if (isArtworkBackground) [self.headerView.artworkView setHidden:YES]; // for the artwork background option, looks shit with the standard artwork there, unfortunately not working right noew along with the rest of the artwork background stuff
 	if (controller.context == 2 && configurations == 0) {
@@ -49,7 +50,7 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 			[artistNameLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
 			[artistNameLabel.widthAnchor constraintEqualToConstant:230].active = YES;
 			[artistNameLabel.heightAnchor constraintEqualToConstant:21.0].active = YES;
-			[artistNameLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor].active = YES;
+			[artistNameLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor constant:rightOffsetForText].active = YES;
 			[artistNameLabel.bottomAnchor constraintEqualToAnchor:self.transportControlsView.topAnchor constant:3].active = YES;
 		}
 		if (!songTitleLabel) {
@@ -63,7 +64,7 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 			[songTitleLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
 			[songTitleLabel.widthAnchor constraintEqualToConstant:230].active = YES;
 			[songTitleLabel.heightAnchor constraintEqualToConstant:21.0].active = YES;
-			[songTitleLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor].active = YES;
+			[songTitleLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor constant:rightOffsetForText].active = YES;
 			[songTitleLabel.bottomAnchor constraintEqualToAnchor:self.transportControlsView.centerYAnchor constant:-20].active = YES;
 		}
 			//couldnt adjust the size of the player so i just made a thing myself (its a button because i have the plan of adding gestures in the future)
@@ -95,7 +96,7 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 			[artistNameLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
 			[artistNameLabel.widthAnchor constraintEqualToConstant:230].active = YES;
 			[artistNameLabel.heightAnchor constraintEqualToConstant:21.0].active = YES;
-			[artistNameLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor].active = YES;
+			[artistNameLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor constant:rightOffsetForText].active = YES;
 			[artistNameLabel.bottomAnchor constraintEqualToAnchor:self.transportControlsView.topAnchor constant:3].active = YES;
 		}
 		if (!songTitleLabel) {
@@ -109,7 +110,7 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 			[songTitleLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
 			[songTitleLabel.widthAnchor constraintEqualToConstant:230].active = YES;
 			[songTitleLabel.heightAnchor constraintEqualToConstant:21.0].active = YES;
-			[songTitleLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor].active = YES;
+			[songTitleLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor constant:rightOffsetForText].active = YES;
 			[songTitleLabel.bottomAnchor constraintEqualToAnchor:self.transportControlsView.centerYAnchor constant:-20].active = YES;
 		}
 	} else if (configurations == 2 && controller.context == 2) {
@@ -140,7 +141,7 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 			[artistNameLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
 			[artistNameLabel.widthAnchor constraintEqualToConstant:230].active = YES;
 			[artistNameLabel.heightAnchor constraintEqualToConstant:21.0].active = YES;
-		    [artistNameLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor].active = YES;
+		    [artistNameLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor constant:rightOffsetForText].active = YES;
 			[artistNameLabel.bottomAnchor constraintEqualToAnchor:songImageForSmall.centerYAnchor constant:3].active = YES;
 		}
 		if (!songTitleLabel) {
@@ -156,7 +157,7 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 				[songTitleLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
 				[songTitleLabel.widthAnchor constraintEqualToConstant:230].active = YES;
 				[songTitleLabel.heightAnchor constraintEqualToConstant:21.0].active = YES;
-				[songTitleLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor].active = YES;
+				[songTitleLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor constant:rightOffsetForText].active = YES;
 				[songTitleLabel.bottomAnchor constraintEqualToAnchor:self.transportControlsView.centerYAnchor constant:-20].active = YES;
 		}
 	} else if (configurations == 3  && controller.context == 2) {
@@ -186,7 +187,7 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 			[artistNameLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
 			[artistNameLabel.widthAnchor constraintEqualToConstant:230].active = YES;
 			[artistNameLabel.heightAnchor constraintEqualToConstant:21.0].active = YES;
-			[artistNameLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor].active = YES;
+			[artistNameLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor constant:rightOffsetForText].active = YES;
 			[artistNameLabel.bottomAnchor constraintEqualToAnchor:songImageForSmall.centerYAnchor constant:3].active = YES;
 		}
 		if (!songTitleLabel) {
@@ -195,14 +196,14 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 			[songTitleLabel setTextAlignment:NSTextAlignmentLeft];
 			[songTitleLabel setAlpha:1];
 			[self addSubview:songTitleLabel];
-			if (colorsEnabled) {
+			if (musicPlayerColorsEnabled) {
 				UIColor *customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"customSubtitleLabelColor"] withFallback:@"#000000"];
 				[songTitleLabel setTextColor:customColor];
 			}
 			[songTitleLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
 			[songTitleLabel.widthAnchor constraintEqualToConstant:230].active = YES;
 			[songTitleLabel.heightAnchor constraintEqualToConstant:21.0].active = YES;
-			[songTitleLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor].active = YES;
+			[songTitleLabel.leftAnchor constraintEqualToAnchor:songImageForSmall.rightAnchor constant:rightOffsetForText].active = YES;
 			[songTitleLabel.bottomAnchor constraintEqualToAnchor:self.transportControlsView.centerYAnchor constant:-20].active = YES;
 		}
 	} else{ 
@@ -229,10 +230,10 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 %end
 %hook MRUNowPlayingTransportControlsView // coloring for the buttons
 
-- (void)layoutSubviews { //ik this is bad but i need it to updaye a lot and there are no other methods that update upon the song changing
-	%orig;
+- (void)setNeedsLayout { //ik this is bad but i need it to updaye a lot and there are no other methods that update upon the song changing
+
 	MRUNowPlayingViewController *controller = (MRUNowPlayingViewController *)[self _viewControllerForAncestor];
-	if (enabled && colorsEnabled && controller.context == 2) {
+	if (musicPlayerColorsEnabled && controller.context == 2) {
 		UIColor *leftColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"customLeftButtonColor"] withFallback:@"#000000"];
 		[self.leftButton setStylingProvider:nil];
 		self.leftButton.imageView.layer.filters = nil;
@@ -255,17 +256,17 @@ NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile
 %hook CSAdjunctItemView // sets the height and opacity of the player
 
 -(void)_updateSizeToMimic{
+	%orig;
 PLPlatterView *platterView = (PLPlatterView*)MSHookIvar<UIView*>(self, "_platterView");
 [platterView.backgroundView setAlpha: musicPlayerAlpha];
 
 if(configurations == 0){
-%orig;
+
  if (haveOutline){
   self.layer.borderWidth = outlineSize;
   UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"outlineColor"] withFallback:@"#000000"];
   self.layer.borderColor = [customColor CGColor];
   self.layer.cornerRadius = 10;
-  
   }
 [self.heightAnchor constraintEqualToConstant:115].active = true; //height
 if (isArtworkBackground){
@@ -297,7 +298,7 @@ if (isBackgroundColored){
 
 }
 else if(configurations == 1 || configurations == 2){
-  %orig;
+
    if (haveOutline){
   self.layer.borderWidth = outlineSize;
   UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"outlineColor"] withFallback:@"#000000"];
@@ -305,7 +306,7 @@ else if(configurations == 1 || configurations == 2){
   self.layer.cornerRadius = 10;
   }
 [self.heightAnchor constraintEqualToConstant:130].active = true;
-if (isArtworkBackground){
+//if (isArtworkBackground){
 songBackground = [UIButton new];
  [platterView.backgroundView setAlpha: 0];
 [songBackground setContentMode:UIViewContentModeScaleAspectFill];
@@ -318,7 +319,7 @@ songBackground = [UIButton new];
 [songBackground setAlpha:musicPlayerAlpha];
 [songBackground setTranslatesAutoresizingMaskIntoConstraints:YES];
 [songBackground setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height)];
-}
+//}
 
 if (isBackgroundColored){
  [platterView.backgroundView setAlpha: 0];
@@ -333,18 +334,14 @@ if (isBackgroundColored){
 
 }
 else if(configurations == 3){
-  %orig;
   if (haveOutline){
   self.layer.borderWidth = outlineSize;
-    
-          UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"outlineColor"] withFallback:@"#000000"];
-        
-        
+  UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"outlineColor"] withFallback:@"#000000"];
   self.layer.borderColor = [customColor CGColor];
   self.layer.cornerRadius = 10;
   }
   [self.heightAnchor constraintEqualToConstant:100].active = true;
-if (isArtworkBackground == YES){
+if (isArtworkBackground){
    [platterView.backgroundView setAlpha: 0];
 songBackground = [UIButton new];
 [songBackground setContentMode:UIViewContentModeScaleAspectFill];
@@ -359,7 +356,7 @@ songBackground = [UIButton new];
 [songBackground setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height)];
 }
 
-if (isBackgroundColored == YES){
+if (isBackgroundColored){
  [platterView.backgroundView setAlpha: 0];
   coloredBackground = [UIView new];
   [coloredBackground setFrame: CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height)];
@@ -375,7 +372,6 @@ if (isBackgroundColored == YES){
 %end
 
 %hook SBMediaController
-
 - (void)setNowPlayingInfo:(id)arg1 { // set now playing info
     %orig;
     MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
@@ -394,15 +390,15 @@ if (isBackgroundColored == YES){
 				songLabel = [NSString stringWithFormat:@"%@ ", [dict objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoTitle]];
 
 				[songBackground setImage:currentArtwork forState:UIControlStateNormal];
-				[songImageForSmall setImage:currentArtwork forState:UIControlStateNormal];
+				[songImageForSmall setImage:currentArtwork forState:UIControlStateNormal]; 
 				[coloredBackground setBackgroundColor:[libKitten primaryColor:currentArtwork]];
 			}
-			lastArtworkData2 = [dict objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
+			lastArtworkData = [dict objectForKey:(__bridge NSString*)kMRMediaRemoteNowPlayingInfoArtworkData];
         }
   	});
 
 	if (haveNotifs) {
-			if (![songLabel isEqualToString:previousTitle]){//TODO: add option to choose between artwork and now playing app as the icon 
+			if (![songLabel isEqualToString:previousTitle]){
 			[[objc_getClass("JBBulletinManager") sharedInstance] showBulletinWithTitle:subtitleLabel message:songLabel bundleID:[[[%c(SBMediaController) sharedInstance] nowPlayingApplication] bundleIdentifier]];
 			}
 			previousTitle = songLabel; //notifications
@@ -410,14 +406,81 @@ if (isBackgroundColored == YES){
 
 }          
 %end
+
+
 %end
+
+%group statusbar
+%hook _UIBatteryView
+-(void)setFillColor:(UIColor *)arg1{
+	%orig;
+	if (isBatteryHidden){
+	self.hidden = YES;
+	}
+}
+%end
+
+%hook _UIStatusBarWifiSignalView
+-(void)didMoveToWindow{
+	%orig;
+	if (isWifiThingyHidden){
+	self.hidden = YES;
+	}
+}
+%end
+%hook _UIStatusBarCellularSignalView
+-(void)setNeedsLayout{
+	%orig;
+	if (isCellularThingyHidden){
+	self.hidden = YES;
+	}
+	self.tintColor = [UIColor redColor];
+}
+%end
+
+%hook _UIStatusBarStringView
+-(void)didMoveToWindow{
+	%orig;
+	if (isTimeHidden){
+	self.hidden = YES;
+	}
+}
+%end
+%hook _UIStatusBar
+-(void)setNeedsLayout{
+	%orig;
+	self.visualProviderClass =  @"_UIStatusBarVisualProvider_Split54";
+}
+
+%end
+%hook _UIBatteryView 
+-(BOOL)_currentlyShowsPercentage {
+	if(showPercentage) return YES;
+	else return NO;
+}
+-(BOOL)_shouldShowBolt {
+    if (showPercentage || modernStatusBar) return NO;
+	else return YES;
+
+}
+%end
+%end
+
 void reloadPrefs() { //prefs
-	enabled = [file boolForKey:@"isEnabled"];
+	musicPlayerEnabled = [file boolForKey:@"isMusicSectionEnabled"];
+	statusBarSectionEnabled = [file boolForKey:@"isStausBarSectionEnabled"];
+	isBatteryHidden = [file boolForKey:@"isBatteryHidden"];
+	isWifiThingyHidden = [file boolForKey:@"isWifiHidden"];
+	isCellularThingyHidden = [file boolForKey:@"isCellularHidden"];
+	isTimeHidden = [file boolForKey:@"isTimeHidden"];
+	modernStatusBar = [file boolForKey:@"modernStatusBar"];
 	isRoutingButtonHidden = [file boolForKey:@"isRoutingButtonHidden"];
 	configurations = [file integerForKey:@"configuration"];
 	musicPlayerAlpha = [file doubleForKey:@"musicPlayerAlpha"];
-	colorsEnabled = [file boolForKey:@"isRoutingButtonHidden"];
+	rightOffsetForText = [file doubleForKey:@"textOffset"];
+	musicPlayerColorsEnabled = [file boolForKey:@"isRoutingButtonHidden"];
 	haveNotifs = [file boolForKey:@"notifications?"]; 
+	showPercentage = [file boolForKey:@"showPercentage"]; 
 	isBackgroundColored = [file boolForKey:@"isBackgroundColorEnabled"];
 	isArtworkBackground = [file boolForKey:@"isArtworkBackground"];
 	haveOutline = [file boolForKey:@"haveOutline?"];
@@ -426,19 +489,32 @@ void reloadPrefs() { //prefs
 
 %ctor {
 	HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"aquariusprefs"];
-	[file registerBool:&enabled default:YES forKey:@"isEnabled"];
+	[file registerBool:&musicPlayerEnabled default:YES forKey:@"isMusicSectionEnabled"];
+	[file registerBool:&isTimeHidden default:NO forKey:@"isTimeHidden"];
+	[file registerBool:&isBatteryHidden default:NO forKey:@"isBatteryHidden"];
+	[file registerBool:&isCellularThingyHidden default:NO forKey:@"isCellularHidden"];
+	[file registerBool:&isWifiThingyHidden default:NO forKey:@"isWifiHidden"];
+
+	[file registerBool:&modernStatusBar default:YES forKey:@"modernStatusBar"];
+	[file registerBool:&statusBarSectionEnabled default:YES forKey:@"isStausBarSectionEnabled"];
 	[file registerBool:&isRoutingButtonHidden default:YES forKey:@"isRoutingButtonHidden"];
 	[file registerDouble:&musicPlayerAlpha default:1 forKey:@"musicPlayerAlpha"];
+	[file registerDouble:&rightOffsetForText default:1 forKey:@"textOffset"];
 	[file registerInteger:&configurations default:0 forKey:@"configuration"];
-	[file registerBool:&colorsEnabled default:NO forKey:@"isColorsEnabled"];
+	[file registerBool:&musicPlayerColorsEnabled default:NO forKey:@"isColorsEnabled"];
 	[file registerBool:&haveNotifs default:YES forKey:@"notifications?"];
-	[file registerBool:&isBackgroundColored default:NO forKey:@"isBackgroundColorEnabled?"];
-	[file registerBool:&isArtworkBackground default:NO forKey:@"isArtworkBackground?"];
+	[file registerBool:&isBackgroundColored default:NO forKey:@"isBackgroundColorEnabled"];
+	[file registerBool:&isArtworkBackground default:NO forKey:@"isArtworkBackground"];
 	[file registerBool:&haveOutline default:NO forKey:@"haveOutline?"];
+	[file registerBool:&showPercentage default:NO forKey:@"showPercentage"];
 	[file registerDouble:&outlineSize default:5 forKey:@"sizeOfOutline?"];
 
-	if (enabled) {
-        %init(tweaky);
+	if (musicPlayerEnabled) {
+        %init(musicplayer);
 	}
+	if (statusBarSectionEnabled){
+		%init(statusbar)
+	}
+	%init
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPrefs, CFSTR("com.nico671.preferenceschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 }

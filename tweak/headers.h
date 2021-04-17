@@ -32,10 +32,39 @@
 @interface MTMaterialView: UIView
 
 @end
+@interface _UIBatteryView
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@end
+
+@interface _UIStatusBarWifiSignalView
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@end
+
+@interface _UIStatusBarIndicatorAirplaneModeItem
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@end
+
+@interface SBFolderIconImageView
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@property (nonatomic, strong, readwrite) UIView *backgroundView;
+@end
+
+@interface _UIStatusBarStringView
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+
+@end
+
+@interface _UIStatusBar
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@property (nonatomic, strong, readwrite) NSMutableDictionary *items;
+@property (nonatomic,strong, readwrite, getter=_visualProviderClassName, setter=_setVisualProviderClassName:)NSString *visualProviderClass;
+@end
 
 
 
-
+@interface _UIStatusBarCellularSignalView : UIView
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@end
 @interface CSAdjunctItemView : UIView{ //player iOS 13 & 14
 	UIView* _platterView;
 }
