@@ -58,9 +58,24 @@
 @property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *items;
 @property (nonatomic,strong, readwrite, getter=_visualProviderClassName, setter=_setVisualProviderClassName:)NSString *visualProviderClass;
+@property (nonatomic,strong, readwrite) UIView * foregroundView;
+@property (nonatomic,assign,readwrite)CGPoint center;
 @end
 
 
+@interface _UIInterfaceActionVibrantSeparatorView
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@end
+
+@interface _UITableViewCellSeparatorView
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+
+@end
+
+
+@interface _UIInterfaceActionBlankSeparatorView
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@end
 
 @interface _UIStatusBarCellularSignalView : UIView
 @property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;

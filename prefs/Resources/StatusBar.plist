@@ -24,6 +24,27 @@
 </dict>
 <dict>
     <key>cell</key>
+    <string>PSGroupCell</string>
+ </dict>
+<dict>
+    <key>cell</key>
+    <string>PSSwitchCell</string>
+    <key>default</key>
+    <false/>
+    <key>defaults</key>
+    <string>aquariusprefs</string>
+    <key>key</key>
+    <string>modernStatusBar</string>
+    <key>label</key>
+    <string>Use Modern Status Bar? (only works on homescreen)</string>
+
+</dict>
+<dict>
+    <key>cell</key>
+    <string>PSGroupCell</string>
+ </dict>
+<dict>
+    <key>cell</key>
     <string>PSSwitchCell</string>
     <key>default</key>
     <false/>
@@ -36,7 +57,31 @@
     <key>id</key>
 	<string>timeHidden</string>
 </dict>
-
+<dict>
+    <key>cell</key>
+    <string>PSLinkCell</string>
+    <key>cellClass</key>
+    <string>SparkColourPickerCell</string>
+    <key>libsparkcolourpicker</key>
+    <dict>
+        <key>defaults</key>
+        <string>aquariusprefs</string>
+        <key>PostNotification</key>
+        <string>com.nico671.preferenceschanged</string>
+        <key>fallback</key>
+        <string>#000000</string>
+        <key>alpha</key>
+        <true/>
+    </dict>
+    <key>label</key>
+    <string>Status Bar Text Tint Color</string>
+    <key>key</key>
+    <string>timeColor</string>
+    </dict>
+<dict>
+    <key>cell</key>
+    <string>PSGroupCell</string>
+ </dict>
 <dict>
     <key>cell</key>
     <string>PSSwitchCell</string>
@@ -53,18 +98,31 @@
 </dict>
 <dict>
     <key>cell</key>
-    <string>PSSwitchCell</string>
-    <key>default</key>
-    <false/>
-    <key>defaults</key>
-    <string>aquariusprefs</string>
-    <key>key</key>
-    <string>modernStatusBar</string>
+    <string>PSLinkCell</string>
+    <key>cellClass</key>
+    <string>SparkColourPickerCell</string>
+    <key>libsparkcolourpicker</key>
+    <dict>
+        <key>defaults</key>
+        <string>aquariusprefs</string>
+        <key>PostNotification</key>
+        <string>com.nico671.preferenceschanged</string>
+        <key>fallback</key>
+        <string>#000000</string>
+        <key>alpha</key>
+        <true/>
+    </dict>
     <key>label</key>
-    <string>Use Modern Status Bar?</string>
-    <key>id</key>
-	<string>batteryHidden</string>
-</dict>
+    <string>Battery Tint Color</string>
+    <key>key</key>
+    <string>batteryFillColor</string>
+    </dict>
+   
+          
+<dict>
+    <key>cell</key>
+    <string>PSGroupCell</string>
+ </dict>
 <dict>
     <key>cell</key>
     <string>PSSwitchCell</string>
@@ -79,6 +137,7 @@
     <key>id</key>
 	<string>wifiHidden</string>
 </dict>
+
 <dict>
     <key>cell</key>
     <string>PSSwitchCell</string>
@@ -93,7 +152,27 @@
     <key>id</key>
 	<string>cellularHidden</string>
 </dict>
-
+<dict>
+    <key>cell</key>
+    <string>PSLinkCell</string>
+    <key>cellClass</key>
+    <string>SparkColourPickerCell</string>
+    <key>libsparkcolourpicker</key>
+    <dict>
+        <key>defaults</key>
+        <string>aquariusprefs</string>
+        <key>PostNotification</key>
+        <string>com.nico671.preferenceschanged</string>
+        <key>fallback</key>
+        <string>#000000</string>
+        <key>alpha</key>
+        <true/>
+    </dict>
+    <key>label</key>
+    <string>Bars Tint Color</string>
+    <key>key</key>
+    <string>cellularColor</string>
+    </dict>
 
 </array>
 <key>title</key>

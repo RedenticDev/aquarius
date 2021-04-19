@@ -1,4 +1,5 @@
 #import "headers.h"
+
 BOOL musicPlayerEnabled, musicPlayerColorsEnabled;
 BOOL isTimeHidden,showPercentage, modernStatusBar, isCellularThingyHidden, isWifiThingyHidden, isRoutingButtonHidden, isBackgroundColored, isDarkImage, isArtworkBackground, haveNotifs, haveOutline, statusBarSectionEnabled, isBatteryHidden;
 //TODO: fucking fix the default player and the progress bar player u dunce
@@ -412,11 +413,27 @@ if (isBackgroundColored){
 
 %group statusbar
 %hook _UIBatteryView
--(void)setFillColor:(UIColor *)arg1{
-	%orig;
-	if (isBatteryHidden){
-	self.hidden = YES;
-	}
+
+-(void)setFillColor:(UIColor *)color {
+  UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"batteryFillColor"] withFallback:@"#000000"];
+	%orig(customColor);
+	if(isBatteryHidden) self.hidden = YES;
+}
+
+-(void)setBodyColor:(UIColor *)color {
+ UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"batteryFillColor"] withFallback:@"#000000"];
+	%orig(customColor);
+}
+
+%end
+ 
+%hook _UIStatusBarVisualProvider_Split54
++(CGSize)notchSize {
+    CGSize const orig = %orig;
+    return CGSizeMake(orig.width, 18);
+}
++(double)height {
+    return 20;
 }
 %end
 
@@ -434,35 +451,49 @@ if (isBackgroundColored){
 	if (isCellularThingyHidden){
 	self.hidden = YES;
 	}
-	self.tintColor = [UIColor redColor];
+
+}
+%end
+%hook _UIStatusBarSignalView
+
+-(void)setActiveColor:(UIColor *)color {
+UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"cellularColor"] withFallback:@"#000000"];
+	%orig(customColor);
+}
+
+-(void)setInactiveColor:(UIColor *)color {
+UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"cellularColor"] withFallback:@"#000000"];
+	%orig(customColor);
+}
+
+%end
+
+
+%hook _UIStatusBar
+-(void)setNeedsLayout{
+	
+	if (modernStatusBar){
+	self.visualProviderClass =  @"_UIStatusBarVisualProvider_Split54";
+	}
+	else %orig;
 }
 %end
 
+
+
 %hook _UIStatusBarStringView
+
 -(void)didMoveToWindow{
 	%orig;
 	if (isTimeHidden){
 	self.hidden = YES;
 	}
 }
-%end
-%hook _UIStatusBar
--(void)setNeedsLayout{
-	%orig;
-	self.visualProviderClass =  @"_UIStatusBarVisualProvider_Split54";
+-(void)setTextColor:(UIColor *)color {
+	UIColor* customColor = [SparkColourPickerUtils colourWithString:[preferencesDictionary objectForKey:@"timeColor"] withFallback:@"#000000"];
+	%orig(customColor);
 }
 
-%end
-%hook _UIBatteryView 
--(BOOL)_currentlyShowsPercentage {
-	if(showPercentage) return YES;
-	else return NO;
-}
--(BOOL)_shouldShowBolt {
-    if (showPercentage || modernStatusBar) return NO;
-	else return YES;
-
-}
 %end
 %end
 
@@ -494,7 +525,6 @@ void reloadPrefs() { //prefs
 	[file registerBool:&isBatteryHidden default:NO forKey:@"isBatteryHidden"];
 	[file registerBool:&isCellularThingyHidden default:NO forKey:@"isCellularHidden"];
 	[file registerBool:&isWifiThingyHidden default:NO forKey:@"isWifiHidden"];
-
 	[file registerBool:&modernStatusBar default:YES forKey:@"modernStatusBar"];
 	[file registerBool:&statusBarSectionEnabled default:YES forKey:@"isStausBarSectionEnabled"];
 	[file registerBool:&isRoutingButtonHidden default:YES forKey:@"isRoutingButtonHidden"];
@@ -515,6 +545,6 @@ void reloadPrefs() { //prefs
 	if (statusBarSectionEnabled){
 		%init(statusbar)
 	}
-	%init
+	
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPrefs, CFSTR("com.nico671.preferenceschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 }
